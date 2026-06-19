@@ -43,7 +43,11 @@ Evera offers video wallpaper functionality with the following features:
 
 ### Debian/Ubuntu (.deb)
 
-Download the latest `.deb` package from the [releases page](https://github.com/ThatOneDipu/Evera/releases) and install:
+```bash
+curl -sL https://github.com/ThatOneDipu/Evera/releases/latest/download/evera_3.6-1_all.deb -o /tmp/evera.deb && sudo dpkg -i /tmp/evera.deb && sudo apt install -f
+```
+
+Or download manually from the [releases page](https://github.com/ThatOneDipu/Evera/releases) and install:
 
 ```bash
 sudo dpkg -i evera_*.deb
