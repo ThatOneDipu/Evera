@@ -1,5 +1,6 @@
 import sys
 import logging
+import re
 import threading
 import requests
 import multiprocessing as mp
@@ -23,6 +24,14 @@ from hidamari.utils import (
     is_gnome,
     is_wayland,
     get_video_paths,
+)
+from hidamari.market import (
+    fetch_latest,
+    search as market_search,
+    fetch_by_tag,
+    fetch_thumb_bytes,
+    get_download_url,
+    download_video,
 )
 
 logging.basicConfig(level=logging.DEBUG)
@@ -56,6 +65,7 @@ class ControlPanel(Gtk.Application):
             "on_streaming_activate": self.on_streaming_activate,
             "on_web_page_activate": self.on_web_page_activate,
             "on_blur_radius_changed": self.on_blur_radius_changed,
+            "on_market_search": self.on_market_search,
         }
         self.builder.connect_signals(signals)
 
@@ -66,6 +76,9 @@ class ControlPanel(Gtk.Application):
         self.icon_view = None
         self.video_paths = None
         self.all_key = "all"
+        self.market_items = []
+        self.market_store = None
+        self.market_current_tag = None
 
         self.is_autostart = os.path.isfile(AUTOSTART_DESKTOP_PATH)
 
@@ -165,6 +178,8 @@ class ControlPanel(Gtk.Application):
             ("local_web_page_apply", self.on_local_web_page_apply),
             ("play_pause", self.on_play_pause),
             ("feeling_lucky", self.on_feeling_lucky),
+            ("market_apply", self.on_market_apply),
+            ("market_refresh", self.on_market_refresh),
             (
                 "config",
                 lambda *_: subprocess.run(["xdg-open", os.path.realpath(CONFIG_PATH)]),
@@ -216,6 +231,7 @@ class ControlPanel(Gtk.Application):
             self.builder.get_object("SpinBlurRadius").set_visible(False)
 
         self._reload_all_widgets()
+        self._init_market()
 
     def do_activate(self):
         if self.window is None:
@@ -501,6 +517,150 @@ class ControlPanel(Gtk.Application):
                 # Ignore NoReply error
                 pass
         self.quit()
+
+    def _init_market(self):
+        tags = ["Anime", "Games", "Car", "Nature", "Superhero", "Fantasy",
+                "Space", "Technology", "Animal", "Horror", "Japan", "Holiday"]
+        flowbox = self.builder.get_object("FlowBoxMarketTags")
+        for tag in tags:
+            btn = Gtk.ToggleButton(label=tag)
+            btn.connect("toggled", self.on_market_tag_toggled, tag.lower())
+            flowbox.add(btn)
+        flowbox.show_all()
+
+        self.market_store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
+        iconview = self.builder.get_object("IconViewMarket")
+        iconview.set_pixbuf_column(0)
+        iconview.set_text_column(1)
+        iconview.set_model(self.market_store)
+        iconview.connect("selection-changed", self._on_market_selection_changed)
+
+        self._load_market_wallpapers()
+
+    def _on_market_selection_changed(self, iconview):
+        selected = iconview.get_selected_items()
+        status = self.builder.get_object("LabelMarketStatus")
+        if selected:
+            idx = selected[0].get_indices()[0]
+            item = self.market_items[idx]
+            status.set_markup(f"<b>{item['title']}</b>  ({item['format']})")
+        else:
+            status.set_text("")
+
+    def _load_market_wallpapers(self, tag=None, query=None):
+        self.market_store.clear()
+        self.market_items = []
+        status = self.builder.get_object("LabelMarketStatus")
+        status.set_text("Loading...")
+
+        def fetch_thread():
+            if query:
+                items = market_search(query)
+            elif tag:
+                items = fetch_by_tag(tag)
+            else:
+                items = fetch_latest()
+            GLib.idle_add(self._display_market_items, items)
+
+        thread = threading.Thread(target=fetch_thread, daemon=True)
+        thread.start()
+
+    def _display_market_items(self, items):
+        self.market_items = items
+        self.market_store.clear()
+        status = self.builder.get_object("LabelMarketStatus")
+        if not items:
+            status.set_text("No wallpapers found")
+            return
+        status.set_text(f"Found {len(items)} wallpapers")
+
+        for i, item in enumerate(items):
+            pixbuf = Gtk.IconTheme.get_default().load_icon("video-x-generic", 164, 0)
+            self.market_store.append([pixbuf, item["title"][:30], item["slug"]])
+            thread = threading.Thread(
+                target=self._load_market_thumb,
+                args=(item["thumb"], self.market_store, i),
+                daemon=True,
+            )
+            thread.start()
+
+    def _load_market_thumb(self, thumb_url, store, idx):
+        data = fetch_thumb_bytes(thumb_url)
+        if data:
+            try:
+                loader = GdkPixbuf.PixbufLoader()
+                loader.write(data)
+                loader.close()
+                pixbuf = loader.get_pixbuf()
+                pixbuf = pixbuf.scale_simple(164, 92, GdkPixbuf.InterpType.BILINEAR)
+                GLib.idle_add(self._update_market_thumb, store, idx, pixbuf)
+            except Exception:
+                pass
+
+    def _update_market_thumb(self, store, idx, pixbuf):
+        if idx < len(store):
+            store[idx][0] = pixbuf
+
+    def on_market_refresh(self, *_):
+        old_query = self.builder.get_object("EntryMarketSearch").get_text().strip()
+        self._load_market_wallpapers(tag=self.market_current_tag, query=old_query or None)
+
+    def on_market_search(self, entry, *args):
+        query = entry.get_text().strip()
+        if query:
+            self.market_current_tag = None
+            for btn in self.builder.get_object("FlowBoxMarketTags").get_children():
+                btn.set_active(False)
+            self._load_market_wallpapers(query=query)
+
+    def on_market_tag_toggled(self, button, tag):
+        if button.get_active():
+            self.market_current_tag = tag
+            self.builder.get_object("EntryMarketSearch").set_text("")
+            self._load_market_wallpapers(tag=tag)
+        else:
+            self.market_current_tag = None
+
+    def on_market_apply(self, *_):
+        iconview = self.builder.get_object("IconViewMarket")
+        selected = iconview.get_selected_items()
+        if not selected:
+            self._show_error("Please select a wallpaper first")
+            return
+        idx = selected[0].get_indices()[0]
+        item = self.market_items[idx]
+        status = self.builder.get_object("LabelMarketStatus")
+        status.set_markup(f"Downloading <b>{item['title']}</b>...")
+        self._download_and_apply(item)
+
+    def _download_and_apply(self, item):
+        def work():
+            video_url = get_download_url(item["slug"])
+            if not video_url:
+                GLib.idle_add(self._show_error, f"Could not find download URL for {item['title']}")
+                return
+            safe_name = re.sub(r'[^\w\-_. ]', '', item["title"]).strip()
+            ext = os.path.splitext(video_url.split("?")[0])[1] or ".mp4"
+            dest = os.path.join(VIDEO_WALLPAPER_DIR, f"{safe_name}{ext}")
+            if download_video(video_url, dest):
+                GLib.idle_add(self._on_market_downloaded, dest)
+            else:
+                GLib.idle_add(self._show_error, f"Failed to download {item['title']}")
+
+        thread = threading.Thread(target=work, daemon=True)
+        thread.start()
+
+    def _on_market_downloaded(self, path):
+        status = self.builder.get_object("LabelMarketStatus")
+        status.set_markup(f"Downloaded: <b>{os.path.basename(path)}</b>")
+        self.config[CONFIG_KEY_MODE] = MODE_VIDEO
+        paths = self.config[CONFIG_KEY_DATA_SOURCE]
+        for name in paths:
+            paths[name] = path
+        self._save_config()
+        if self.server is not None:
+            self.server.video(path)
+        self._reload_icon_view()
 
     def _reload_all_widgets(self):
         self._reload_icon_view()

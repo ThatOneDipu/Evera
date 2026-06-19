@@ -29,6 +29,7 @@ hidamari_sources = [
   '__init__.py',
   '__main__.py',
   'commons.py',
+  'market.py',
   'menu.py',
   'server.py',
   'monitor.py',
