@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch Hidamari",
+            "name": "Launch Evera",
             "type": "python",
             "request": "launch",
             "program": "__main__.py",

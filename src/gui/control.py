@@ -121,6 +121,7 @@ class ControlPanel(Gtk.Application):
         screen = Gdk.Screen.get_default()
         css_provider = Gtk.CssProvider()
         css_provider.load_from_data(b"""
+<<<<<<< HEAD
             @define-color bg-dark #0a0a0f;
             @define-color bg-surface #111118;
             @define-color bg-card #16161f;
@@ -424,6 +425,35 @@ class ControlPanel(Gtk.Application):
             .flat:active {
                 background: @accent-dim;
             }
+=======
+            window { background: rgba(30, 30, 40, 0.98); }
+            headerbar { background: linear-gradient(to bottom, #2a2a3d, #1e1e2e); border: none; box-shadow: 0 1px 8px rgba(0,0,0,0.3); }
+            .stack-switcher button { background: transparent; color: #cdd6f4; border: none; border-radius: 8px; padding: 6px 16px; margin: 4px 2px; }
+            .stack-switcher button:checked { background: rgba(137, 180, 250, 0.3); color: #89b4fa; }
+            .stack-switcher button:hover { background: rgba(137, 180, 250, 0.15); }
+            entry { background: #313244; color: #cdd6f4; border: 1px solid #45475a; border-radius: 8px; padding: 6px 12px; }
+            entry:focus { border-color: #89b4fa; }
+            button { background: #313244; color: #cdd6f4; border: 1px solid #45475a; border-radius: 8px; padding: 6px 12px; }
+            button:hover { background: #45475a; }
+            button.suggested-action { background: #89b4fa; color: #1e1e2e; border: none; font-weight: bold; }
+            button.suggested-action:hover { background: #74c7ec; }
+            scale slider { background: #89b4fa; border: none; border-radius: 50%; min-width: 14px; min-height: 14px; }
+            scale trough { background: #45475a; border-radius: 8px; min-height: 6px; }
+            scale trough highlight { background: #89b4fa; border-radius: 8px; }
+            spinbutton { background: #313244; color: #cdd6f4; border: 1px solid #45475a; border-radius: 8px; }
+            .view { background: #313244; color: #cdd6f4; }
+            scrolledwindow { border: 1px solid #45475a; border-radius: 8px; }
+            scrolledwindow .view { border-radius: 8px; }
+            label { color: #cdd6f4; }
+            separator { background: #45475a; }
+            popover { background: #1e1e2e; border: 1px solid #45475a; border-radius: 12px; }
+            modelbutton { color: #cdd6f4; border-radius: 6px; padding: 6px 12px; }
+            modelbutton:hover { background: rgba(137, 180, 250, 0.2); }
+            iconview { background: #313244; color: #cdd6f4; border-radius: 8px; }
+            iconview:selected { background: rgba(137, 180, 250, 0.3); }
+            .titlebar button { background: transparent; border: none; }
+            .titlebar button:hover { background: rgba(137, 180, 250, 0.15); }
+>>>>>>> a9c496c063d94b4d19ef5681f161f863e9061c33
         """)
         Gtk.StyleContext.add_provider_for_screen(
             screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION

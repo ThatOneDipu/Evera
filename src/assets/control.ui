@@ -313,7 +313,10 @@ All Contributors https://github.com/jeffshee/hidamari/graphs/contributors</prope
     <property name="default-width">1024</property>
     <property name="default-height">576</property>
     <property name="icon-name">io.github.jeffshee.Evera</property>
+<<<<<<< HEAD
     <property name="name">ApplicationWindow</property>
+=======
+>>>>>>> a9c496c063d94b4d19ef5681f161f863e9061c33
     <child>
       <object class="GtkStack" id="stack1">
         <property name="visible">True</property>
@@ -338,8 +341,13 @@ All Contributors https://github.com/jeffshee/hidamari/graphs/contributors</prope
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+<<<<<<< HEAD
                     <property name="label" translatable="yes">&lt;span size="large"&gt;&lt;b&gt;Local Video&lt;/b&gt;&lt;/span&gt;
 &lt;span size="small"&gt;Videos located in Evera folder&lt;/span&gt;</property>
+=======
+                    <property name="label" translatable="yes">&lt;span size="x-large"&gt;&lt;b&gt;Local Video&lt;/b&gt;&lt;/span&gt;
+Videos located in Evera folder</property>
+>>>>>>> a9c496c063d94b4d19ef5681f161f863e9061c33
                     <property name="use-markup">True</property>
                     <property name="xalign">0</property>
                   </object>
