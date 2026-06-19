@@ -1,6 +1,6 @@
 #!@PYTHON@
 
-# hidamari.in
+# evera.in
 # 
 # Copyright (C) 2022 Jeff Shee (jeffshee8969@gmail.com)
 # 
@@ -29,9 +29,9 @@ localedir = '@localedir@'
 
 sys.path.insert(1, pkgdatadir)
 signal.signal(signal.SIGINT, signal.SIG_DFL)
-locale.bindtextdomain('hidamari', localedir)
-locale.textdomain('hidamari')
-gettext.install('hidamari', localedir)
+locale.bindtextdomain('evera', localedir)
+locale.textdomain('evera')
+gettext.install('evera', localedir)
 
 if __name__ == '__main__':
     import gi

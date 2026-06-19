@@ -1,33 +1,14 @@
-<p align="center"><img src="https://raw.githubusercontent.com/jeffshee/hidamari/master/assets/hidamari.svg" width="256"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/ThatOneDipu/Evera/master/data/icons/hicolor/scalable/apps/io.github.jeffshee.Evera.svg" width="256"></p>
 
-<p align="center">Video wallpaper for Linux. Written in Python. 🐍</p>  
-<p align="center">Hidamari 日溜まり【ひだまり】(n) sunny spot; exposure to the sun</p>
+<p align="center">Video wallpaper for Linux. Written in Python.</p>
 
-# Hidamari　ーひだまりー
-If you like my project, please consider buying me a coffee!! (⁎˃ ꇴ ˂⁎)ｯ
+# Evera
 
-[![Github-sponsors](https://img.shields.io/badge/sponsor-30363D?style=for-the-badge&logo=GitHub-Sponsors&logoColor=#EA4AAA)](https://github.com/sponsors/jeffshee)
-[![Ko-Fi](https://img.shields.io/badge/Ko--fi-F16061?style=for-the-badge&logo=ko-fi&logoColor=white)](https://ko-fi.com/jeffshee)
-[![BuyMeACoffee](https://img.shields.io/badge/Buy%20Me%20a%20Coffee-ffdd00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/jeffshee)
-
-Also please don't forget to click that star button! 🌟  
-Your support is truly appreciated!
-
-## Join our Discord!
-
-[![Discord](https://img.shields.io/badge/Discord-%235865F2.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/mP7yg4gX7g)
-
-## For GNOME user 🐾
-Please also check my new project [Hanabi](https://github.com/jeffshee/gnome-ext-hanabi)! While the project is still in its infancy, it has the potential to become more integrated with GNOME Shell
+A fork of [Hidamari](https://github.com/jeffshee/hidamari) with an improved dark theme, runtime fixes, and system-level packaging.
 
 ## Features 🔥
 
-There are several solutions to achieve video as wallpaper on Linux, for example:
-
-1. [Xwinwrap + mpv](https://www.linuxuprising.com/2019/05/livestream-wallpaper-for-your-gnome.html)
-2. [Komorebi](https://github.com/cheesecakeufo/komorebi)
-
-Hidamari offers similar feature as above, with additional features listed below:
+Evera offers video wallpaper functionality with the following features:
 
 - [x] Autostart after login
 - [x] Apply static wallpaper with blur effect <sup>1</sup>
@@ -42,52 +23,73 @@ Hidamari offers similar feature as above, with additional features listed below:
 - [x] Webpage as wallpaper! <sup>6</sup>
 - [ ] You name it! =)
 
-<sup>1</sup> Video frame can be applied as system wallpaper, look great in <i>GNOME</i> (currently GNOME exclusive, support for other DE might be added if requested...)  
+<sup>1</sup> Video frame can be applied as system wallpaper, look great in <i>GNOME</i> (currently GNOME exclusive)  
 <sup>2</sup> Automatically pauses playback when maximized window or full screen mode is detected (currently X11 only...)  
 <sup>3</sup> Randomly select and play a video  
-<sup>4</sup> Use <i>vlc</i> as backend (currently HW acceleration doesn't work with Nvidia+Wayland combination...)     
+<sup>4</sup> Use <i>vlc</i> as backend (currently HW acceleration doesn't work with Nvidia+Wayland combination...)  
 <sup>5</sup> Use <i>yt-dlp</i> as backend, tested with YouTube videos  
 <sup>6</sup> Theoretically it can be anything from a normal webpage to <i>Unity/Godot WebGL games</i>, be creative!
 
+## What's different from Hidamari?
+
+- **Renamed to Evera** — all user-facing strings, D-Bus interface, and system identifiers
+- **Dark theme redesign** — true black background with electric blue accents, card surfaces, improved readability
+- **AyatanaAppIndicator3 support** — works on systems with the newer indicator stack (e.g. Ubuntu 23.10+)
+- **GnomeDesktop 3.0 compatibility** — lowered dependency version for broader distro support
+- **Graceful ffprobe handling** — no crash when ffprobe is missing
+- **Debian packaging** — installable as a system `.deb` package (no Flatpak required)
+
 ## Installation ⏬
+
+### Debian/Ubuntu (.deb)
+
+Download the latest `.deb` package from the [releases page](https://github.com/ThatOneDipu/Evera/releases) and install:
+
+```bash
+sudo dpkg -i evera_*.deb
+sudo apt install -f
+```
+
 ### Flatpak 📦
-It is available on Flathub!
 
-<a href='https://flathub.org/apps/details/io.github.jeffshee.Hidamari'><img width='240' alt='Download Hidamari on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
-
-#### Command line instructions
-Install:  
-Make sure to follow the [setup guide](https://flatpak.org/setup/) before installing
-```
-flatpak install flathub io.github.jeffshee.Hidamari
-```
-Run:  
-```
-flatpak run io.github.jeffshee.Hidamari
+```bash
+flatpak install flathub io.github.jeffshee.Evera
 ```
 
-### Unofficial package
-These are maintained by the community!
-| Distro     | URL                                     | Maintainer                            |
-|------------|-----------------------------------------|---------------------------------------|
-| Arch Linux | [![AUR](https://img.shields.io/aur/version/hidamari?style=for-the-badge)](https://aur.archlinux.org/packages/hidamari) | None |
+### Build from source
+
+See [docs/development.md](docs/development.md) for build instructions.
+
+## Usage
+
+```bash
+evera
+```
+
+Or launch in background mode (wallpaper only, no GUI):
+
+```bash
+evera -b
+```
 
 ## Screenshot 📸
 
-![](https://raw.githubusercontent.com/jeffshee/hidamari/master/assets/screenshot-1.png)
-![](https://raw.githubusercontent.com/jeffshee/hidamari/master/assets/screenshot-2.png)
-![](https://raw.githubusercontent.com/jeffshee/hidamari/master/assets/screenshot-3.png)
+![](https://raw.githubusercontent.com/ThatOneDipu/Evera/master/assets/screenshot-1.png)
 
-## Please!! 🙏
+## Requirements
 
-Collaboration is welcome! Let's make it better together~  
-Feel free to open an issue if you have any problem or suggestion 🤗  
+- Python 3.8+
+- VLC
+- GTK 3.24+
+- libayatana-appindicator (or libappindicator)
+
+## Acknowledgements
+
+- Original project: [Hidamari](https://github.com/jeffshee/hidamari) by [jeffshee](https://github.com/jeffshee)
+- Icons made by [Freepik](http://www.freepik.com/) from [Flaticon](https://www.flaticon.com)
 
 ## Contributors ✨
 
-<a href="https://github.com/jeffshee/hidamari/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=jeffshee/hidamari" />
+<a href="https://github.com/ThatOneDipu/Evera/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=ThatOneDipu/Evera" />
 </a>
-
-Made with [contributors-img](https://contrib.rocks).  
-Icons made by [Freepik](http://www.freepik.com/) from [Flaticon](https://www.flaticon.com)

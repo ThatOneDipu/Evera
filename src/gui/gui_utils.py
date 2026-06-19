@@ -4,7 +4,7 @@ import logging
 import threading
 
 import gi
-gi.require_version("GnomeDesktop", "4.0")
+gi.require_version("GnomeDesktop", "3.0")
 from gi.repository import Gio, GnomeDesktop, GdkPixbuf
 
 try:

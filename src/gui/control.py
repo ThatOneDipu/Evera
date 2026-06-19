@@ -14,32 +14,23 @@ from gi.repository import Gtk, Gio, GLib, GdkPixbuf, Gdk
 from pydbus import SessionBus
 import yt_dlp
 
-try:
-    import os
-
-    sys.path.insert(1, os.path.join(sys.path[0], ".."))
-    from commons import *
-    from monitor import *
-    from gui.gui_utils import get_thumbnail, debounce
-    from utils import ConfigUtil, setup_autostart, is_gnome, is_wayland, get_video_paths
-except ModuleNotFoundError:
-    from hidamari.monitor import *
-    from hidamari.commons import *
-    from hidamari.gui.gui_utils import get_thumbnail, debounce
-    from hidamari.utils import (
-        ConfigUtil,
-        setup_autostart,
-        is_gnome,
-        is_wayland,
-        get_video_paths,
-    )
+from hidamari.monitor import *
+from hidamari.commons import *
+from hidamari.gui.gui_utils import get_thumbnail, debounce
+from hidamari.utils import (
+    ConfigUtil,
+    setup_autostart,
+    is_gnome,
+    is_wayland,
+    get_video_paths,
+)
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(LOGGER_NAME)
 
 APP_ID = f"{PROJECT}.gui"
-APP_TITLE = "Hidamari"
-APP_UI_RESOURCE_PATH = "/io/jeffshee/Hidamari/control.ui"
+APP_TITLE = "Evera"
+APP_UI_RESOURCE_PATH = "/io/jeffshee/Evera/control.ui"
 
 
 class ControlPanel(Gtk.Application):
@@ -57,7 +48,8 @@ class ControlPanel(Gtk.Application):
         try:
             self.builder.add_from_resource(APP_UI_RESOURCE_PATH)
         except GLib.Error:
-            self.builder.add_from_file(os.path.abspath("./assets/control.ui"))
+            ui_path = os.path.join(os.path.dirname(__file__), "..", "assets", "control.ui")
+            self.builder.add_from_file(os.path.abspath(ui_path))
         # Handlers declared in `control.ui``
         signals = {
             "on_volume_changed": self.on_volume_changed,
@@ -125,6 +117,41 @@ class ControlPanel(Gtk.Application):
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
+
+        screen = Gdk.Screen.get_default()
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_data(b"""
+            window { background: rgba(30, 30, 40, 0.98); }
+            headerbar { background: linear-gradient(to bottom, #2a2a3d, #1e1e2e); border: none; box-shadow: 0 1px 8px rgba(0,0,0,0.3); }
+            .stack-switcher button { background: transparent; color: #cdd6f4; border: none; border-radius: 8px; padding: 6px 16px; margin: 4px 2px; }
+            .stack-switcher button:checked { background: rgba(137, 180, 250, 0.3); color: #89b4fa; }
+            .stack-switcher button:hover { background: rgba(137, 180, 250, 0.15); }
+            entry { background: #313244; color: #cdd6f4; border: 1px solid #45475a; border-radius: 8px; padding: 6px 12px; }
+            entry:focus { border-color: #89b4fa; }
+            button { background: #313244; color: #cdd6f4; border: 1px solid #45475a; border-radius: 8px; padding: 6px 12px; }
+            button:hover { background: #45475a; }
+            button.suggested-action { background: #89b4fa; color: #1e1e2e; border: none; font-weight: bold; }
+            button.suggested-action:hover { background: #74c7ec; }
+            scale slider { background: #89b4fa; border: none; border-radius: 50%; min-width: 14px; min-height: 14px; }
+            scale trough { background: #45475a; border-radius: 8px; min-height: 6px; }
+            scale trough highlight { background: #89b4fa; border-radius: 8px; }
+            spinbutton { background: #313244; color: #cdd6f4; border: 1px solid #45475a; border-radius: 8px; }
+            .view { background: #313244; color: #cdd6f4; }
+            scrolledwindow { border: 1px solid #45475a; border-radius: 8px; }
+            scrolledwindow .view { border-radius: 8px; }
+            label { color: #cdd6f4; }
+            separator { background: #45475a; }
+            popover { background: #1e1e2e; border: 1px solid #45475a; border-radius: 12px; }
+            modelbutton { color: #cdd6f4; border-radius: 6px; padding: 6px 12px; }
+            modelbutton:hover { background: rgba(137, 180, 250, 0.2); }
+            iconview { background: #313244; color: #cdd6f4; border-radius: 8px; }
+            iconview:selected { background: rgba(137, 180, 250, 0.3); }
+            .titlebar button { background: transparent; border: none; }
+            .titlebar button:hover { background: rgba(137, 180, 250, 0.15); }
+        """)
+        Gtk.StyleContext.add_provider_for_screen(
+            screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
 
         actions = [
             (
@@ -195,7 +222,7 @@ class ControlPanel(Gtk.Application):
             self.window: Gtk.ApplicationWindow = self.builder.get_object(
                 "ApplicationWindow"
             )
-            self.window.set_title("Hidamari")
+            self.window.set_title("Evera")
             self.window.set_application(self)
             self.window.set_position(Gtk.WindowPosition.CENTER)
         self.window.present()
@@ -214,10 +241,10 @@ class ControlPanel(Gtk.Application):
             parent=self.window,
             modal=True,
             destroy_with_parent=True,
-            text="Welcome to Hidamari 🤗",
+            text="Welcome to Evera ✨",
             message_type=Gtk.MessageType.INFO,
             #    secondary_text="You can bring up the Menu by <b>Right click</b> on the desktop",
-            secondary_text="Quickstart for adding local videos:\n ・Click the folder icon to open the Hidamari folder\n ・Put your videos there\n ・Click the refresh button",
+            secondary_text="Quickstart for adding local videos:\n ・Click the folder icon to open the Evera folder\n ・Put your videos there\n ・Click the refresh button",
             secondary_use_markup=True,
             buttons=Gtk.ButtonsType.OK,
         )
@@ -519,13 +546,13 @@ class ControlPanel(Gtk.Application):
 
 
 def main(
-    version="devel", pkgdatadir="/app/share/hidamari", localedir="/app/share/locale"
+    version="devel", pkgdatadir="/app/share/evera", localedir="/app/share/locale"
 ):
     try:
-        resource = Gio.Resource.load(os.path.join(pkgdatadir, "hidamari.gresource"))
+        resource = Gio.Resource.load(os.path.join(pkgdatadir, "evera.gresource"))
         resource._register()
         icon_theme = Gtk.IconTheme.get_default()
-        icon_theme.add_resource_path("/io/jeffshee/Hidamari/icons")
+        icon_theme.add_resource_path("/io/jeffshee/Evera/icons")
     except GLib.Error:
         logger.error("[GUI] Couldn't load resource")
 

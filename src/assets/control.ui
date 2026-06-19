@@ -5,17 +5,17 @@
   <object class="GtkAboutDialog" id="AboutDialog">
     <property name="can-focus">False</property>
     <property name="type-hint">dialog</property>
-    <property name="program-name">Hidamari</property>
+    <property name="program-name">Evera</property>
     <property name="copyright" translatable="yes">Copyright © 2022 Jeff Shee</property>
-    <property name="comments" translatable="yes">Video wallpaper for Linux. Written in Python. 🐍
+    <property name="comments" translatable="yes">Video wallpaper for Linux. Written in Python.
 
-Hidamari 日溜まり 【ひだまり】 (n) sunny spot; exposure to the sun</property>
+Evera — beautiful live wallpapers for your desktop</property>
     <property name="website">https://github.com/jeffshee/hidamari</property>
     <property name="website-label" translatable="yes">GitHub</property>
     <property name="authors">Jeff Shee https://github.com/jeffshee
 All Contributors https://github.com/jeffshee/hidamari/graphs/contributors</property>
     <property name="artists">Freepik https://www.freepik.com</property>
-    <property name="logo-icon-name">io.github.jeffshee.Hidamari</property>
+    <property name="logo-icon-name">io.github.jeffshee.Evera</property>
     <child internal-child="vbox">
       <object class="GtkBox">
         <property name="can-focus">False</property>
@@ -277,7 +277,7 @@ All Contributors https://github.com/jeffshee/hidamari/graphs/contributors</prope
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="action-name">app.about</property>
-            <property name="text" translatable="yes">About Hidamari</property>
+            <property name="text" translatable="yes">About Evera</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -291,7 +291,7 @@ All Contributors https://github.com/jeffshee/hidamari/graphs/contributors</prope
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="action-name">app.quit</property>
-            <property name="text" translatable="yes">Quit Hidamari</property>
+            <property name="text" translatable="yes">Quit Evera</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -312,7 +312,7 @@ All Contributors https://github.com/jeffshee/hidamari/graphs/contributors</prope
     <property name="can-focus">False</property>
     <property name="default-width">1024</property>
     <property name="default-height">576</property>
-    <property name="icon-name">io.github.jeffshee.Hidamari</property>
+    <property name="icon-name">io.github.jeffshee.Evera</property>
     <child>
       <object class="GtkStack" id="stack1">
         <property name="visible">True</property>
@@ -337,7 +337,7 @@ All Contributors https://github.com/jeffshee/hidamari/graphs/contributors</prope
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;span size="x-large"&gt;&lt;b&gt;Local Video&lt;/b&gt;&lt;/span&gt;
-Videos located in Hidamari folder</property>
+Videos located in Evera folder</property>
                     <property name="use-markup">True</property>
                     <property name="xalign">0</property>
                   </object>
@@ -377,7 +377,7 @@ Videos located in Hidamari folder</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
-                    <property name="tooltip-text" translatable="yes">Open Hidamari folder</property>
+                    <property name="tooltip-text" translatable="yes">Open Evera folder</property>
                     <property name="halign">center</property>
                     <property name="valign">center</property>
                     <property name="action-name">app.local_video_dir</property>

@@ -255,7 +255,7 @@ class PlayerWindow(Gtk.ApplicationWindow):
 class VideoPlayer(BasePlayer):
     """
     <node>
-    <interface name='io.github.jeffshee.hidamari.player'>
+    <interface name='io.github.jeffshee.evera.player'>
         <property name="mode" type="s" access="read"/>
         <property name="data_source" type="s" access="readwrite"/>
         <property name="volume" type="i" access="readwrite"/>

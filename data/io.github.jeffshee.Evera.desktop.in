@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Evera
+Exec=evera
+Icon=io.github.jeffshee.Evera
+Terminal=false
+Type=Application
+Categories=GTK;Utility;
+StartupNotify=true

@@ -1,11 +1,11 @@
 # Development Note
 
-Hidamari can be built using two methods: "Build and Install" and "Build as Flatpak."
+Evera can be built using two methods: "Build and Install" and "Build as Flatpak."
 
 1. **Build and Install**
    - This method requires you to have dependencies installed on your system.
    - It installs all components, including scripts, icons, and desktop file, into the `/usr/local/*` directory.
-   - If your distro has the necessary packages, 'Build and Install' is the quickest Hidamari setup
+   - If your distro has the necessary packages, 'Build and Install' is the quickest Evera setup
 
 2. **Build as Flatpak**
    - This method doesn't require you to have dependencies installed on your system.
@@ -65,12 +65,12 @@ meson setup build && meson install -C build
 ### Uninstall
 Please, check these commands before running. 🙏
 ```bash
-sudo rm -rf /usr/local/share/hidamari
-sudo rm /usr/local/bin/hidamari
-sudo rm /usr/local/share/appdata/io.github.jeffshee.Hidamari.appdata.xml
-sudo rm /usr/local/share/applications/io.github.jeffshee.Hidamari.desktop
-sudo rm /usr/local/share/glib-2.0/schemas/io.github.jeffshee.Hidamari.gschema.xml
-sudo rm /usr/local/share/icons/hicolor/scalable/apps/io.github.jeffshee.Hidamari.svg
+sudo rm -rf /usr/local/share/evera
+sudo rm /usr/local/bin/evera
+sudo rm /usr/local/share/appdata/io.github.jeffshee.Evera.appdata.xml
+sudo rm /usr/local/share/applications/io.github.jeffshee.Evera.desktop
+sudo rm /usr/local/share/glib-2.0/schemas/io.github.jeffshee.Evera.gschema.xml
+sudo rm /usr/local/share/icons/hicolor/scalable/apps/io.github.jeffshee.Evera.svg
 ```
 
 ## Build as Flatpak
@@ -79,7 +79,7 @@ First, please make sure you have `flatpak` and `flatpak-builder` installed on yo
 
 For Flatpak development, VSCode with the Flatpak extension (`bilelmoussaoui.flatpak-vscode`) is recommended. Alternatively, GNOME Builder is also useful when building Flatpak applications.
 
-When cloning the Hidamari repo, you should pull the submodules as well (`shared-modules`) as it is required for building Flatpak.
+When cloning the Evera repo, you should pull the submodules as well (`shared-modules`) as it is required for building Flatpak.
 
 To do so, use `--recurse-submodules` when cloning:
 ```bash

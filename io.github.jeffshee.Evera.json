@@ -1,16 +1,16 @@
 {
-    "app-id": "io.github.jeffshee.Hidamari",
+    "app-id": "io.github.jeffshee.Evera",
     "runtime": "org.gnome.Platform",
     "runtime-version": "47",
     "sdk": "org.gnome.Sdk",
-    "command": "hidamari",
+    "command": "evera",
     "finish-args": [
         "--share=network",
         "--share=ipc",
         "--device=dri",
         "--socket=x11",
         "--socket=pulseaudio",
-        "--filesystem=xdg-videos/Hidamari:create",
+        "--filesystem=xdg-videos/Evera:create",
         "--talk-name=org.gnome.Shell.Extensions",
         "--talk-name=org.gnome.SessionManager",
         "--talk-name=org.gnome.ScreenSaver",
@@ -156,7 +156,7 @@
             ]
         },
         {
-            "name": "hidamari",
+            "name": "evera",
             "builddir": true,
             "buildsystem": "meson",
             "sources": [

@@ -8,3 +8,9 @@ build/
 /venv/
 .flatpak/
 *.flatpak
+
+# Flatpak build copy
+/hidamari/
+
+# Debian packages
+*.deb
