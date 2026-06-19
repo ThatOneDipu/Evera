@@ -66,7 +66,7 @@ def is_vdpau_ok():
 
 def is_flatpak():
     """
-    Check if Hidamari is a Flatpak
+    Check if Evera is a Flatpak
     Reference:
     https://gitlab.gnome.org/jrb/crosswords/-/blob/master/src/crosswords-init.c#L179
     """
@@ -89,8 +89,8 @@ def setup_autostart(autostart):
         # Request Autostart
         xdp.request_background(
             None,  # parent
-            "Autostart Hidamari in background",  # reason
-            ['hidamari', '-b'],  # commandline
+            "Autostart Evera in background",  # reason
+            ['evera', '-b'],  # commandline
             Xdp.BackgroundFlags.AUTOSTART if autostart else Xdp.BackgroundFlags.NONE,  # flags
             None,  # cancellable
             lambda portal, result, user_data: logger.debug(
@@ -159,7 +159,7 @@ def gnome_extension_is_installed(extension_name: str):
 
 def gnome_desktop_icon_workaround():
     """
-    Workaround for GNOME desktop icon extensions not displaying the icons on top of Hidamari.
+    Workaround for GNOME desktop icon extensions not displaying the icons on top of Evera.
     Call this right after the wallpaper is shown.
     """
     if not is_gnome():

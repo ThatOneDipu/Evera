@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='utf-8'?>
+<component type="desktop-application">
+  <id>io.github.jeffshee.Evera</id>
+  <name>Evera</name>
+  <summary>Video wallpaper for Linux</summary>
+  <developer id="io.github.jeffshee">
+    <name>Jeff Shee</name>
+  </developer>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
+  <update_contact>jeffshee8969@gmail.com</update_contact>
+  <description>
+    <p>Video wallpaper for Linux. Written in Python.</p>
+    <p>Evera — a beautiful, feature-rich live wallpaper application.</p>
+    <p>Similar functionality to Xwinwrap + mpv or Komorebi, with more features.</p>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image type="source">https://raw.githubusercontent.com/jeffshee/hidamari/master/assets/screenshot-1.png</image>
+    </screenshot>
+    <screenshot>
+      <image type="source">https://raw.githubusercontent.com/jeffshee/hidamari/master/assets/screenshot-2.png</image>
+    </screenshot>
+    <screenshot>
+      <image type="source">https://raw.githubusercontent.com/jeffshee/hidamari/master/assets/screenshot-3.png</image>
+    </screenshot>
+  </screenshots>
+  <releases>
+    <release version="3.6" date="2025-01-03" type="stable">
+      <description>
+        <ul>
+          <li>Rebranded as Evera with improved UI and animations</li>
+          <li>Add multi monitor feature for video (@xaprier)</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
+  <url type="homepage">https://github.com/jeffshee/hidamari</url>
+  <url type="bugtracker">https://github.com/jeffshee/hidamari/issues</url>
+  <categories>
+    <category>GTK</category>
+    <category>Utility</category>
+  </categories>
+  <content_rating type="oars-1.1"/>
+  <launchable type="desktop-id">io.github.jeffshee.Evera.desktop</launchable>
+  <keywords>
+    <keyword>Live Wallpaper</keyword>
+    <keyword>Video Wallpaper</keyword>
+    <keyword>Wallpaper</keyword>
+  </keywords>
+</component>

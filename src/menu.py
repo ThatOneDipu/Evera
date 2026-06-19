@@ -5,9 +5,13 @@ import setproctitle
 
 import gi
 gi.require_version("Gtk", "3.0")
-gi.require_version('AppIndicator3', '0.1')
+try:
+    gi.require_version('AppIndicator3', '0.1')
+    from gi.repository import AppIndicator3 as AppIndicator
+except (ValueError, ImportError):
+    gi.require_version('AyatanaAppIndicator3', '0.1')
+    from gi.repository import AyatanaAppIndicator3 as AppIndicator
 from gi.repository import GLib, Gtk
-from gi.repository import AppIndicator3 as AppIndicator
 
 from pydbus import SessionBus
 
@@ -19,7 +23,7 @@ except ModuleNotFoundError:
 logger = logging.getLogger(LOGGER_NAME)
 
 APP_INDICATOR_ID = PROJECT
-APP_INDICATOR_ICON = "io.github.jeffshee.Hidamari"
+APP_INDICATOR_ICON = "io.github.jeffshee.Evera"
 
 # Reuse SessionBus instance to avoid creating multiple connections
 _session_bus = None
@@ -93,7 +97,7 @@ def start_action(f: callable):
 def build_menu(mode):
     menu = Gtk.Menu()
     #
-    item_show = Gtk.MenuItem(label="Show Hidamari")
+    item_show = Gtk.MenuItem(label="Show Evera")
     item_show.connect("activate", lambda *_: start_action(on_item_show))
     #
     item_mute = Gtk.MenuItem(label="Toggle Mute Audio")
@@ -108,7 +112,7 @@ def build_menu(mode):
     item_lucky = Gtk.MenuItem(label="I'm Feeling Lucky")
     item_lucky.connect("activate", lambda *_: start_action(on_item_lucky))
     #
-    item_quit = Gtk.MenuItem(label="Quit Hidamari")
+    item_quit = Gtk.MenuItem(label="Quit Evera")
     item_quit.connect("activate", lambda *_: start_action(on_item_quit))
     #
     # Filter out unsupported action in current mode

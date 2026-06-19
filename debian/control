@@ -1,0 +1,24 @@
+Source: evera
+Section: video
+Priority: optional
+Maintainer: Jeff Shee <jeffshee8969@gmail.com>
+Build-Depends: meson, ninja-build, python3, libglib2.0-bin, desktop-file-utils
+Standards-Version: 4.6.2
+
+Package: evera
+Architecture: all
+Depends: python3,
+         python3-gi,
+         python3-gi-cairo,
+         python3-pil,
+         python3-requests,
+         python3-vlc,
+         gir1.2-gtk-3.0,
+         gir1.2-ayatanaappindicator3-0.1,
+         gir1.2-gnomedesktop-3.0,
+         python3-pydbus,
+         python3-setproctitle,
+         yt-dlp,
+         ${misc:Depends}
+Description: Video wallpaper for Linux
+ Beautiful live wallpapers for your desktop.

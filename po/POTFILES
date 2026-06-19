@@ -1,7 +1,4 @@
-data/io.github.jeffshee.Hidamari.desktop.in
-data/io.github.jeffshee.Hidamari.appdata.xml.in
-data/io.github.jeffshee.Hidamari.gschema.xml
-src/window.ui
-src/main.py
-src/window.py
+data/io.github.jeffshee.Evera.desktop.in
+data/io.github.jeffshee.Evera.appdata.xml.in
+data/io.github.jeffshee.Evera.gschema.xml
 

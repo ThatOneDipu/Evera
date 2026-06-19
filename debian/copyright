@@ -1,0 +1,7 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Evera
+Source: https://github.com/jeffshee/hidamari
+
+Files: *
+Copyright: 2022 Jeff Shee
+License: GPL-3.0+

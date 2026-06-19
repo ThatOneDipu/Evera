@@ -5,17 +5,17 @@
   <object class="GtkAboutDialog" id="AboutDialog">
     <property name="can-focus">False</property>
     <property name="type-hint">dialog</property>
-    <property name="program-name">Hidamari</property>
+    <property name="program-name">Evera</property>
     <property name="copyright" translatable="yes">Copyright © 2022 Jeff Shee</property>
-    <property name="comments" translatable="yes">Video wallpaper for Linux. Written in Python. 🐍
+    <property name="comments" translatable="yes">Video wallpaper for Linux. Written in Python.
 
-Hidamari 日溜まり 【ひだまり】 (n) sunny spot; exposure to the sun</property>
+Evera — beautiful live wallpapers for your desktop</property>
     <property name="website">https://github.com/jeffshee/hidamari</property>
     <property name="website-label" translatable="yes">GitHub</property>
     <property name="authors">Jeff Shee https://github.com/jeffshee
 All Contributors https://github.com/jeffshee/hidamari/graphs/contributors</property>
     <property name="artists">Freepik https://www.freepik.com</property>
-    <property name="logo-icon-name">io.github.jeffshee.Hidamari</property>
+    <property name="logo-icon-name">io.github.jeffshee.Evera</property>
     <child internal-child="vbox">
       <object class="GtkBox">
         <property name="can-focus">False</property>
@@ -277,7 +277,7 @@ All Contributors https://github.com/jeffshee/hidamari/graphs/contributors</prope
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="action-name">app.about</property>
-            <property name="text" translatable="yes">About Hidamari</property>
+            <property name="text" translatable="yes">About Evera</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -291,7 +291,7 @@ All Contributors https://github.com/jeffshee/hidamari/graphs/contributors</prope
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="action-name">app.quit</property>
-            <property name="text" translatable="yes">Quit Hidamari</property>
+            <property name="text" translatable="yes">Quit Evera</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -312,15 +312,17 @@ All Contributors https://github.com/jeffshee/hidamari/graphs/contributors</prope
     <property name="can-focus">False</property>
     <property name="default-width">1024</property>
     <property name="default-height">576</property>
-    <property name="icon-name">io.github.jeffshee.Hidamari</property>
+    <property name="icon-name">io.github.jeffshee.Evera</property>
+    <property name="name">ApplicationWindow</property>
     <child>
       <object class="GtkStack" id="stack1">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="margin-start">16</property>
         <property name="margin-end">16</property>
-        <property name="margin-top">16</property>
+        <property name="margin-top">12</property>
         <property name="margin-bottom">16</property>
+
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
@@ -336,8 +338,8 @@ All Contributors https://github.com/jeffshee/hidamari/graphs/contributors</prope
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">&lt;span size="x-large"&gt;&lt;b&gt;Local Video&lt;/b&gt;&lt;/span&gt;
-Videos located in Hidamari folder</property>
+                    <property name="label" translatable="yes">&lt;span size="large"&gt;&lt;b&gt;Local Video&lt;/b&gt;&lt;/span&gt;
+&lt;span size="small"&gt;Videos located in Evera folder&lt;/span&gt;</property>
                     <property name="use-markup">True</property>
                     <property name="xalign">0</property>
                   </object>
@@ -377,7 +379,7 @@ Videos located in Hidamari folder</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
-                    <property name="tooltip-text" translatable="yes">Open Hidamari folder</property>
+                    <property name="tooltip-text" translatable="yes">Open Evera folder</property>
                     <property name="halign">center</property>
                     <property name="valign">center</property>
                     <property name="action-name">app.local_video_dir</property>
@@ -462,8 +464,8 @@ Videos located in Hidamari folder</property>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">&lt;span size="x-large"&gt;&lt;b&gt;Streaming&lt;/b&gt;&lt;/span&gt;
-Videos from streaming services</property>
+                <property name="label" translatable="yes">&lt;span size="large"&gt;&lt;b&gt;Streaming&lt;/b&gt;&lt;/span&gt;
+&lt;span size="small"&gt;Videos from streaming services&lt;/span&gt;</property>
                 <property name="use-markup">True</property>
                 <property name="xalign">0</property>
               </object>
@@ -602,8 +604,8 @@ Videos from streaming services</property>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">&lt;span size="x-large"&gt;&lt;b&gt;Web Page&lt;/b&gt;&lt;/span&gt;
-Set a web page as wallpaper</property>
+                <property name="label" translatable="yes">&lt;span size="large"&gt;&lt;b&gt;Web Page&lt;/b&gt;&lt;/span&gt;
+&lt;span size="small"&gt;Set a web page as wallpaper&lt;/span&gt;</property>
                 <property name="use-markup">True</property>
                 <property name="xalign">0</property>
               </object>
@@ -798,6 +800,7 @@ Set a web page as wallpaper</property>
         <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="show-close-button">True</property>
+        <property name="spacing">8</property>
         <child type="title">
           <object class="GtkStackSwitcher">
             <property name="visible">True</property>
@@ -806,12 +809,59 @@ Set a web page as wallpaper</property>
           </object>
         </child>
         <child>
+          <object class="GtkButton" id="ButtonFeelingLucky">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="tooltip-text" translatable="yes">I'm Feeling Lucky</property>
+            <property name="action-name">app.feeling_lucky</property>
+            <style>
+              <class name="flat"/>
+            </style>
+            <child>
+              <object class="GtkImage" id="ButtonPlayPauseIcon1">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="icon-name">dice3-symbolic</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="ButtonPlayPause">
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="tooltip-text" translatable="yes">Toggle Play/Pause</property>
+            <property name="action-name">app.play_pause</property>
+            <style>
+              <class name="flat"/>
+            </style>
+            <child>
+              <object class="GtkImage" id="ButtonPlayPauseIcon">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="icon-name">playback-symbolic</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkMenuButton" id="menubutton1">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
             <property name="receives-default">True</property>
             <property name="popover">PopoverMain</property>
+            <style>
+              <class name="flat"/>
+            </style>
             <child>
               <object class="GtkImage">
                 <property name="visible">True</property>
@@ -822,44 +872,7 @@ Set a web page as wallpaper</property>
           </object>
           <packing>
             <property name="pack-type">end</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="ButtonPlayPause">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="tooltip-text" translatable="yes">Toggle Play/Pause</property>
-            <property name="action-name">app.play_pause</property>
-            <child>
-              <object class="GtkImage" id="ButtonPlayPauseIcon">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="icon-name">playback-symbolic</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="ButtonFeelingLucky">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="receives-default">True</property>
-            <property name="tooltip-text" translatable="yes">I'm Feeling Lucky</property>
-            <property name="action-name">app.feeling_lucky</property>
-            <child>
-              <object class="GtkImage" id="ButtonPlayPauseIcon1">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="icon-name">dice3-symbolic</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="position">2</property>
+            <property name="position">3</property>
           </packing>
         </child>
       </object>

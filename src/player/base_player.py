@@ -6,7 +6,7 @@ import setproctitle
 
 import gi
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gio, Gdk
+from gi.repository import Gtk, Gio, Gdk, GLib
 
 from pydbus import SessionBus
 
@@ -32,7 +32,7 @@ class DummyWindow(Gtk.ApplicationWindow):
 class BasePlayer(Gtk.Application):
     """
     <node>
-    <interface name='io.github.jeffshee.hidamari.player'>
+    <interface name='io.github.jeffshee.evera.player'>
         <property name="mode" type="s" access="read"/>
         <property name="data_source" type="s" access="readwrite"/>
         <property name="volume" type="i" access="readwrite"/>
@@ -103,8 +103,19 @@ class BasePlayer(Gtk.Application):
                 x, y, width, height = rect.x, rect.y, rect.width, rect.height
                 window.set_size_request(width, height)
                 window.move(x, y)
+                window.set_opacity(0.0)
                 self.windows[monitor] = window
             self.windows[monitor].present()
+        self._fade_in_windows()
+
+    def _fade_in_windows(self):
+        self._fade_alpha = 0.0
+        def fade():
+            self._fade_alpha = min(self._fade_alpha + 0.08, 1.0)
+            for win in self.windows.values():
+                win.set_opacity(self._fade_alpha)
+            return self._fade_alpha < 1.0
+        GLib.timeout_add(25, fade)
         # Workaround for DING extension
         gnome_desktop_icon_workaround()
 

@@ -1,9 +1,9 @@
 import os
 import subprocess
 
-LOGGER_NAME = "Hidamari"
+LOGGER_NAME = "Evera"
 
-PROJECT = "io.github.jeffshee.Hidamari"
+PROJECT = "io.github.jeffshee.Evera"
 DBUS_NAME_SERVER = f"{PROJECT}.server"
 DBUS_NAME_PLAYER = f"{PROJECT}.player"
 
@@ -12,35 +12,35 @@ try:
     xdg_video_dir = subprocess.check_output(
         "xdg-user-dir VIDEOS", shell=True, encoding="UTF-8"
     ).replace("\n", "")
-    VIDEO_WALLPAPER_DIR = os.path.join(xdg_video_dir, "Hidamari")
+    VIDEO_WALLPAPER_DIR = os.path.join(xdg_video_dir, "Evera")
 except FileNotFoundError:
-    # xdg-user-dir not found, use $HOME/Hidamari for Video directory instead
-    VIDEO_WALLPAPER_DIR = os.path.join(HOME, "Hidamari")
+    # xdg-user-dir not found, use $HOME/Evera for Video directory instead
+    VIDEO_WALLPAPER_DIR = os.path.join(HOME, "Evera")
 
 xdg_config_home = os.environ.get("XDG_CONFIG_HOME", os.path.join(HOME, ".config"))
 AUTOSTART_DIR = os.path.join(xdg_config_home, "autostart")
 AUTOSTART_DESKTOP_PATH = os.path.join(AUTOSTART_DIR, f"{PROJECT}.desktop")
 AUTOSTART_DESKTOP_CONTENT = """[Desktop Entry]
-Name=Hidamari
-Exec=hidamari -b
-Icon=io.github.jeffshee.Hidamari
+Name=Evera
+Exec=evera -b
+Icon=io.github.jeffshee.Evera
 Terminal=false
 Type=Application
 Categories=GTK;Utility;
 StartupNotify=true
 """
 AUTOSTART_DESKTOP_CONTENT_FLATPAK = """[Desktop Entry]
-Name=Hidamari
-Exec=/usr/bin/flatpak run --command=hidamari io.github.jeffshee.Hidamari -b
-Icon=io.github.jeffshee.Hidamari
+Name=Evera
+Exec=/usr/bin/flatpak run --command=evera io.github.jeffshee.Evera -b
+Icon=io.github.jeffshee.Evera
 Terminal=false
 Type=Application
 Categories=GTK;Utility;
 StartupNotify=true
-X-Flatpak=io.github.jeffshee.Hidamari
+X-Flatpak=io.github.jeffshee.Evera
 """
 
-CONFIG_DIR = os.path.join(xdg_config_home, "hidamari")
+CONFIG_DIR = os.path.join(xdg_config_home, "evera")
 CONFIG_PATH = os.path.join(CONFIG_DIR, "config.json")
 
 MODE_NULL = "MODE_NULL"

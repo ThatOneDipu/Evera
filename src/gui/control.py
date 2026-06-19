@@ -14,32 +14,23 @@ from gi.repository import Gtk, Gio, GLib, GdkPixbuf, Gdk
 from pydbus import SessionBus
 import yt_dlp
 
-try:
-    import os
-
-    sys.path.insert(1, os.path.join(sys.path[0], ".."))
-    from commons import *
-    from monitor import *
-    from gui.gui_utils import get_thumbnail, debounce
-    from utils import ConfigUtil, setup_autostart, is_gnome, is_wayland, get_video_paths
-except ModuleNotFoundError:
-    from hidamari.monitor import *
-    from hidamari.commons import *
-    from hidamari.gui.gui_utils import get_thumbnail, debounce
-    from hidamari.utils import (
-        ConfigUtil,
-        setup_autostart,
-        is_gnome,
-        is_wayland,
-        get_video_paths,
-    )
+from hidamari.monitor import *
+from hidamari.commons import *
+from hidamari.gui.gui_utils import get_thumbnail, debounce
+from hidamari.utils import (
+    ConfigUtil,
+    setup_autostart,
+    is_gnome,
+    is_wayland,
+    get_video_paths,
+)
 
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(LOGGER_NAME)
 
 APP_ID = f"{PROJECT}.gui"
-APP_TITLE = "Hidamari"
-APP_UI_RESOURCE_PATH = "/io/jeffshee/Hidamari/control.ui"
+APP_TITLE = "Evera"
+APP_UI_RESOURCE_PATH = "/io/jeffshee/Evera/control.ui"
 
 
 class ControlPanel(Gtk.Application):
@@ -57,7 +48,8 @@ class ControlPanel(Gtk.Application):
         try:
             self.builder.add_from_resource(APP_UI_RESOURCE_PATH)
         except GLib.Error:
-            self.builder.add_from_file(os.path.abspath("./assets/control.ui"))
+            ui_path = os.path.join(os.path.dirname(__file__), "..", "assets", "control.ui")
+            self.builder.add_from_file(os.path.abspath(ui_path))
         # Handlers declared in `control.ui``
         signals = {
             "on_volume_changed": self.on_volume_changed,
@@ -125,6 +117,317 @@ class ControlPanel(Gtk.Application):
 
     def do_startup(self):
         Gtk.Application.do_startup(self)
+
+        screen = Gdk.Screen.get_default()
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_data(b"""
+            @define-color bg-dark #0a0a0f;
+            @define-color bg-surface #111118;
+            @define-color bg-card #16161f;
+            @define-color bg-elevated #1a1a26;
+            @define-color border-subtle #1e1e30;
+            @define-color border-muted #2a2a40;
+            @define-color text-primary #e8e8f0;
+            @define-color text-secondary #8888a0;
+            @define-color accent #3b82f6;
+            @define-color accent-glow #2563eb;
+            @define-color accent-dim rgba(59, 130, 246, 0.15);
+            @define-color surface-hover rgba(59, 130, 246, 0.08);
+
+            window {
+                background: @bg-dark;
+                color: @text-primary;
+            }
+
+            headerbar {
+                background: linear-gradient(180deg, #0f0f1a 0%, #0a0a0f 100%);
+                border: none;
+                border-bottom: 1px solid @border-subtle;
+                box-shadow: 0 2px 16px rgba(0,0,0,0.5);
+                padding: 4px 8px;
+                min-height: 48px;
+            }
+
+            .stack-switcher {
+                background: @bg-card;
+                border-radius: 10px;
+                padding: 3px;
+            }
+
+            .stack-switcher button {
+                background: transparent;
+                color: @text-secondary;
+                border: none;
+                border-radius: 8px;
+                padding: 6px 18px;
+                margin: 0;
+                font-weight: 500;
+            }
+
+            .stack-switcher button:checked {
+                background: @accent-dim;
+                color: @accent;
+                box-shadow: 0 0 12px rgba(59, 130, 246, 0.1);
+            }
+
+            .stack-switcher button:hover {
+                background: @surface-hover;
+                color: @text-primary;
+            }
+
+            entry {
+                background: @bg-card;
+                color: @text-primary;
+                border: 1px solid @border-muted;
+                border-radius: 8px;
+                padding: 8px 14px;
+                min-height: 20px;
+            }
+
+            entry:focus {
+                border-color: @accent;
+                box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+                background: @bg-elevated;
+            }
+
+            entry:disabled {
+                opacity: 0.5;
+            }
+
+            button {
+                background: @bg-card;
+                color: @text-primary;
+                border: 1px solid @border-muted;
+                border-radius: 8px;
+                padding: 7px 14px;
+                min-height: 20px;
+                font-weight: 500;
+            }
+
+            button:hover {
+                background: @bg-elevated;
+                border-color: @border-muted;
+            }
+
+            button:active {
+                background: @accent-dim;
+            }
+
+            button.suggested-action {
+                background: linear-gradient(135deg, @accent 0%, @accent-glow 100%);
+                color: #ffffff;
+                border: none;
+                font-weight: 600;
+                box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
+            }
+
+            button.suggested-action:hover {
+                background: linear-gradient(135deg, #4b8bf7 0%, #3575e8 100%);
+                box-shadow: 0 4px 20px rgba(59, 130, 246, 0.45);
+            }
+
+            button.suggested-action:active {
+                background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+                box-shadow: 0 1px 4px rgba(59, 130, 246, 0.2);
+            }
+
+            button.toggle:checked {
+                background: @accent-dim;
+                border-color: @accent;
+                color: @accent;
+            }
+
+            scale slider {
+                background: @accent;
+                border: 2px solid @bg-dark;
+                border-radius: 50%;
+                min-width: 16px;
+                min-height: 16px;
+                box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+            }
+
+            scale slider:hover {
+                box-shadow: 0 0 16px rgba(59, 130, 246, 0.5);
+            }
+
+            scale trough {
+                background: @bg-card;
+                border: 1px solid @border-subtle;
+                border-radius: 8px;
+                min-height: 6px;
+            }
+
+            scale trough highlight {
+                background: linear-gradient(90deg, @accent 0%, #60a5fa 100%);
+                border-radius: 8px;
+            }
+
+            spinbutton {
+                background: @bg-card;
+                color: @text-primary;
+                border: 1px solid @border-muted;
+                border-radius: 8px;
+            }
+
+            spinbutton button {
+                background: transparent;
+                border: none;
+                color: @text-primary;
+                min-width: 24px;
+                padding: 4px;
+            }
+
+            spinbutton button:hover {
+                background: @surface-hover;
+            }
+
+            .view {
+                background: @bg-card;
+                color: @text-primary;
+            }
+
+            scrolledwindow {
+                border: 1px solid @border-subtle;
+                border-radius: 10px;
+                background: @bg-surface;
+            }
+
+            scrolledwindow .view {
+                border-radius: 10px;
+                background: transparent;
+            }
+
+            scrollbar {
+                background: @bg-dark;
+                border: none;
+            }
+
+            scrollbar slider {
+                background: @border-muted;
+                border-radius: 4px;
+                min-width: 6px;
+            }
+
+            scrollbar slider:hover {
+                background: @accent;
+            }
+
+            label {
+                color: @text-primary;
+            }
+
+            separator {
+                background: @border-subtle;
+            }
+
+            popover {
+                background: @bg-elevated;
+                border: 1px solid @border-muted;
+                border-radius: 14px;
+                box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+            }
+
+            modelbutton {
+                color: @text-primary;
+                border-radius: 8px;
+                padding: 8px 16px;
+                margin: 2px 4px;
+            }
+
+            modelbutton:hover {
+                background: @surface-hover;
+            }
+
+            modelbutton:checked {
+                background: @accent-dim;
+                color: @accent;
+            }
+
+            iconview {
+                background: transparent;
+                color: @text-primary;
+            }
+
+            iconview:selected {
+                background: @accent-dim;
+                border: 1px solid @accent;
+                border-radius: 10px;
+            }
+
+            .titlebar button {
+                background: transparent;
+                border: none;
+                border-radius: 6px;
+                padding: 6px;
+                min-width: 32px;
+                min-height: 32px;
+            }
+
+            .titlebar button:hover {
+                background: @surface-hover;
+            }
+
+            .titlebar button:active {
+                background: @accent-dim;
+            }
+
+            .titlebar button.close:hover {
+                background: rgba(239, 68, 68, 0.2);
+                color: #ef4444;
+            }
+
+            expander {
+                color: @text-primary;
+            }
+
+            expander label {
+                color: @text-secondary;
+                font-size: 0.9em;
+            }
+
+            expander label:hover {
+                color: @accent;
+            }
+
+            filechooserbutton button {
+                background: @bg-card;
+                border: 1px solid @border-muted;
+            }
+
+            GtkExpander {
+                border: none;
+            }
+
+            GtkExpander .title {
+                color: @text-secondary;
+            }
+
+            GtkExpander .title:hover {
+                color: @accent;
+            }
+
+            #LabelBlurRadius, #LabelVolume {
+                color: @text-secondary;
+                font-size: 0.9em;
+            }
+
+            .flat {
+                background: transparent;
+                border: none;
+                box-shadow: none;
+            }
+
+            .flat:hover {
+                background: @surface-hover;
+            }
+
+            .flat:active {
+                background: @accent-dim;
+            }
+        """)
+        Gtk.StyleContext.add_provider_for_screen(
+            screen, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
 
         actions = [
             (
@@ -195,7 +498,7 @@ class ControlPanel(Gtk.Application):
             self.window: Gtk.ApplicationWindow = self.builder.get_object(
                 "ApplicationWindow"
             )
-            self.window.set_title("Hidamari")
+            self.window.set_title("Evera")
             self.window.set_application(self)
             self.window.set_position(Gtk.WindowPosition.CENTER)
         self.window.present()
@@ -214,10 +517,10 @@ class ControlPanel(Gtk.Application):
             parent=self.window,
             modal=True,
             destroy_with_parent=True,
-            text="Welcome to Hidamari 🤗",
+            text="Welcome to Evera ✨",
             message_type=Gtk.MessageType.INFO,
             #    secondary_text="You can bring up the Menu by <b>Right click</b> on the desktop",
-            secondary_text="Quickstart for adding local videos:\n ・Click the folder icon to open the Hidamari folder\n ・Put your videos there\n ・Click the refresh button",
+            secondary_text="Quickstart for adding local videos:\n ・Click the folder icon to open the Evera folder\n ・Put your videos there\n ・Click the refresh button",
             secondary_use_markup=True,
             buttons=Gtk.ButtonsType.OK,
         )
@@ -519,13 +822,13 @@ class ControlPanel(Gtk.Application):
 
 
 def main(
-    version="devel", pkgdatadir="/app/share/hidamari", localedir="/app/share/locale"
+    version="devel", pkgdatadir="/app/share/evera", localedir="/app/share/locale"
 ):
     try:
-        resource = Gio.Resource.load(os.path.join(pkgdatadir, "hidamari.gresource"))
+        resource = Gio.Resource.load(os.path.join(pkgdatadir, "evera.gresource"))
         resource._register()
         icon_theme = Gtk.IconTheme.get_default()
-        icon_theme.add_resource_path("/io/jeffshee/Hidamari/icons")
+        icon_theme.add_resource_path("/io/jeffshee/Evera/icons")
     except GLib.Error:
         logger.error("[GUI] Couldn't load resource")
 

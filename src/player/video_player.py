@@ -255,7 +255,7 @@ class PlayerWindow(Gtk.ApplicationWindow):
 class VideoPlayer(BasePlayer):
     """
     <node>
-    <interface name='io.github.jeffshee.hidamari.player'>
+    <interface name='io.github.jeffshee.evera.player'>
         <property name="mode" type="s" access="read"/>
         <property name="data_source" type="s" access="readwrite"/>
         <property name="volume" type="i" access="readwrite"/>
@@ -391,10 +391,11 @@ class VideoPlayer(BasePlayer):
                     dimension = dimension.split("x")
                     video_width[monitor] = int(dimension[0])
                     video_height[monitor] = int(dimension[1])
-            except subprocess.CalledProcessError:
+            except (subprocess.CalledProcessError, FileNotFoundError):
                 for monitor, video in data_source.items():
                     video_width.setdefault(monitor, None)
                     video_height.setdefault(monitor, None)
+                    logger.warning(f"[VideoPlayer] Couldn't get video dimensions for {video}")
                     
             for (monitor, window) in self.windows.items():
                 source = data_source[monitor.get_model()] if monitor.get_model() in data_source and len(data_source[monitor.get_model()]) != 0 else data_source['Default']

@@ -30,10 +30,10 @@ loop = GLib.MainLoop()
 logger = logging.getLogger(LOGGER_NAME)
 
 
-class HidamariServer(object):
+class EveraServer(object):
     """
     <node>
-    <interface name='io.github.jeffshee.hidamari.server'>
+    <interface name='io.github.jeffshee.evera.server'>
         <method name='null'/>
         <method name='video'>
             <arg type='s' name='video_path' direction='in'/>
@@ -65,7 +65,7 @@ class HidamariServer(object):
     """
 
     def __init__(self, version, pkgdatadir, localedir, args):
-        setproctitle.setproctitle("hidamari-server")
+        setproctitle.setproctitle("evera-server")
 
         self.version = version
         self.pkgdatadir = pkgdatadir
@@ -134,10 +134,10 @@ class HidamariServer(object):
 
         if mode in [MODE_VIDEO, MODE_STREAM]:
             self.player_process = Process(
-                name=f"hidamari-player-{self._player_count}", target=video_player_main)
+                name=f"evera-player-{self._player_count}", target=video_player_main)
         elif mode == MODE_WEBPAGE:
             self.player_process = Process(
-                name=f"hidamari-player-{self._player_count}", target=web_player_main)
+                name=f"evera-player-{self._player_count}", target=web_player_main)
         elif mode == MODE_NULL:
             pass
         else:
@@ -156,7 +156,7 @@ class HidamariServer(object):
                         self.sys_icon_process.kill()
                         self.sys_icon_process.join(timeout=1)
                 self.sys_icon_process = Process(
-                    name="hidamari-systray", target=show_systray_icon, args=(mode,))
+                    name="evera-systray", target=show_systray_icon, args=(mode,))
                 self.sys_icon_process.start()
             self._prev_mode = self.mode
 
@@ -217,7 +217,7 @@ class HidamariServer(object):
 
     def show_gui(self):
         """Show main GUI"""
-        self.gui_process = Process(name="hidamari-gui", target=gui_main, args=(
+        self.gui_process = Process(name="evera-gui", target=gui_main, args=(
             self.version, self.pkgdatadir, self.localedir,))
         self.gui_process.start()
 
@@ -347,7 +347,7 @@ def main(version, pkgdatadir, localedir, args):
         # Pause before launching
         time.sleep(args.p)
         bus = SessionBus()
-        server = HidamariServer(version, pkgdatadir, localedir, args)
+        server = EveraServer(version, pkgdatadir, localedir, args)
         try:
             bus.publish(DBUS_NAME_SERVER, server)
             loop.run()
