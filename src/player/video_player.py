@@ -391,7 +391,8 @@ class VideoPlayer(BasePlayer):
                     dimension = dimension.split("x")
                     video_width[monitor] = int(dimension[0])
                     video_height[monitor] = int(dimension[1])
-            except subprocess.CalledProcessError:
+            except (subprocess.CalledProcessError, FileNotFoundError):
+                logger.warning("[ffprobe] Could not determine video dimensions, skipping centercrop")
                 for monitor, video in data_source.items():
                     video_width.setdefault(monitor, None)
                     video_height.setdefault(monitor, None)
