@@ -34,9 +34,9 @@ def _fetch_bytes(url):
 def parse_wallpapers(html):
     items = []
     pattern = re.compile(
-        r'<a\s+title="([^"]*)"\s+href="/([^"]+)"[^>]*>.*?'
-        r'<img[^>]*src="([^"]+)"[^>]*>.*?'
-        r'<span\s+class="frm">([^<]*)</span>',
+        r'<a\s+title="([^"]*)"\s+href=/([^"\s>]+)[^>]*>.*?'
+        r'<img[^>]*src=([^"\s>]+)[^>]*>.*?'
+        r'<span\s+class=frm>([^<]*)</span>',
         re.DOTALL
     )
     for match in pattern.finditer(html):
