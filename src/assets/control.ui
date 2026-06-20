@@ -803,7 +803,7 @@ Set a web page as wallpaper</property>
                 <property name="can-focus">False</property>
                 <property name="spacing">8</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkLabel" id="LabelMarketHeader">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;span size="x-large"&gt;&lt;b&gt;Market&lt;/b&gt;&lt;/span&gt;
@@ -877,6 +877,46 @@ Browse live wallpapers from motionbgs.com</property>
               </packing>
             </child>
             <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Source:</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkComboBoxText" id="ComboMarketSource">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <items>
+                      <item translatable="yes">Motion Backgrounds</item>
+                      <item translatable="yes">MoeWalls</item>
+                    </items>
+                    <signal name="changed" handler="on_market_source_changed" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkFlowBox" id="FlowBoxMarketTags">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
@@ -889,7 +929,7 @@ Browse live wallpapers from motionbgs.com</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">2</property>
+                <property name="position">3</property>
               </packing>
             </child>
             <child>
@@ -912,7 +952,7 @@ Browse live wallpapers from motionbgs.com</property>
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
-                <property name="position">3</property>
+                <property name="position">4</property>
               </packing>
             </child>
             <child>
@@ -956,7 +996,7 @@ Browse live wallpapers from motionbgs.com</property>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
-                <property name="position">4</property>
+                <property name="position">5</property>
               </packing>
             </child>
           </object>

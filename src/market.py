@@ -64,7 +64,7 @@ def fetch_latest(page=1):
 
 def search(query, page=1):
     params = urllib.parse.urlencode({"q": query})
-    url = f"{BASE_URL}/search/?{params}"
+    url = f"{BASE_URL}/search?{params}"
     if page > 1:
         url += f"&page={page}"
     try:
@@ -96,30 +96,25 @@ def fetch_thumb_bytes(url):
 
 
 def get_download_url(slug):
-    url = f"{BASE_URL}/{slug}/"
+    url = f"{BASE_URL}/{slug}"
     try:
         html = _fetch(url)
         pattern = re.compile(
-            r'<a\s+[^>]*href="(https?://[^"]+\.(mp4|webm))"',
+            r'<meta\s+[^>]*content=(https?://[^"\'<>\s]+media/(\d+)/[^"\'<>\s]+\.(?:mp4|webm))[^>]*property=og:video',
             re.IGNORECASE
         )
         match = pattern.search(html)
         if match:
-            return match.group(1)
+            video_id = match.group(2)
+            return f"{BASE_URL}/dl/4k/{video_id}"
         pattern2 = re.compile(
-            r'data-url\s*=\s*["\']([^"\']+\.(mp4|webm))',
+            r'<meta\s+[^>]*property=og:video[^>]*content=(https?://[^"\'<>\s]+media/(\d+)/[^"\'<>\s]+\.(?:mp4|webm))',
             re.IGNORECASE
         )
         match2 = pattern2.search(html)
         if match2:
-            return match2.group(1)
-        pattern3 = re.compile(
-            r'<source\s+[^>]*src="([^"]+\.(mp4|webm))"',
-            re.IGNORECASE
-        )
-        match3 = pattern3.search(html)
-        if match3:
-            return match3.group(1)
+            video_id = match2.group(2)
+            return f"{BASE_URL}/dl/4k/{video_id}"
         return None
     except Exception as e:
         logger.error(f"[Market] Failed to get download URL for '{slug}': {e}")
@@ -146,3 +141,79 @@ def download_video(url, dest_path):
         if os.path.exists(dest_path):
             os.remove(dest_path)
         return False
+
+
+# ---- Moewalls.com ----
+
+MOEWALLS_BASE = "https://moewalls.com"
+MOEWALLS_DL_BASE = "https://go.moewalls.com"
+
+
+def parse_moewalls_wallpapers(html):
+    items = []
+    pattern = re.compile(
+        r'<a\s+title="([^"]*)"\s+class="g1-frame"\s+href="https://moewalls\.com/([^"]+)"',
+        re.DOTALL
+    )
+    for match in pattern.finditer(html):
+        title, path = match.groups()
+        slug = path.strip("/")
+        items.append({"title": title.strip(), "slug": slug, "thumb": None, "format": "HD"})
+    for item in items:
+        slug_part = item["slug"].rsplit("/", 1)[-1].replace("-live-wallpaper", "")
+        thumb_pattern = re.compile(
+            rf'https://moewalls\.com/wp-content/uploads/\d+/\d+/{re.escape(slug_part)}-thumb-\d+x\d+\.jpg',
+            re.IGNORECASE
+        )
+        m = thumb_pattern.search(html)
+        if m:
+            item["thumb"] = m.group(0)
+    return items
+
+
+def fetch_moewalls_latest(page=1):
+    url = MOEWALLS_BASE if page == 1 else f"{MOEWALLS_BASE}/page/{page}/"
+    try:
+        html = _fetch(url)
+        return parse_moewalls_wallpapers(html)
+    except Exception as e:
+        logger.error(f"[Market] MoeWalls latest failed: {e}")
+        return []
+
+
+def fetch_moewalls_by_category(category, page=1):
+    url = f"{MOEWALLS_BASE}/category/{category}/"
+    if page > 1:
+        url = f"{MOEWALLS_BASE}/category/{category}/page/{page}/"
+    try:
+        html = _fetch(url)
+        return parse_moewalls_wallpapers(html)
+    except Exception as e:
+        logger.error(f"[Market] MoeWalls category '{category}' failed: {e}")
+        return []
+
+
+def search_moewalls(query, page=1):
+    params = urllib.parse.urlencode({"s": query})
+    url = f"{MOEWALLS_BASE}/?{params}"
+    if page > 1:
+        url += f"&page={page}"
+    try:
+        html = _fetch(url)
+        return parse_moewalls_wallpapers(html)
+    except Exception as e:
+        logger.error(f"[Market] MoeWalls search failed: {e}")
+        return []
+
+
+def get_moewalls_download_url(slug):
+    url = f"{MOEWALLS_BASE}/{slug}/"
+    try:
+        html = _fetch(url)
+        m = re.search(r'id="moe-download"[^>]*data-url="([^"]+)"', html)
+        if m:
+            return f"{MOEWALLS_DL_BASE}/download.php?video={m.group(1)}"
+        return None
+    except Exception as e:
+        logger.error(f"[Market] MoeWalls download URL for '{slug}' failed: {e}")
+        return None

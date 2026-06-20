@@ -32,6 +32,10 @@ from hidamari.market import (
     fetch_thumb_bytes,
     get_download_url,
     download_video,
+    fetch_moewalls_latest,
+    fetch_moewalls_by_category,
+    search_moewalls,
+    get_moewalls_download_url,
 )
 
 logging.basicConfig(level=logging.DEBUG)
@@ -66,6 +70,7 @@ class ControlPanel(Gtk.Application):
             "on_web_page_activate": self.on_web_page_activate,
             "on_blur_radius_changed": self.on_blur_radius_changed,
             "on_market_search": self.on_market_search,
+            "on_market_source_changed": self.on_market_source_changed,
         }
         self.builder.connect_signals(signals)
 
@@ -518,22 +523,49 @@ class ControlPanel(Gtk.Application):
                 pass
         self.quit()
 
-    def _init_market(self):
-        tags = ["Anime", "Games", "Car", "Nature", "Superhero", "Fantasy",
-                "Space", "Technology", "Animal", "Horror", "Japan", "Holiday"]
+    def _get_market_source(self):
+        combo = self.builder.get_object("ComboMarketSource")
+        return "moewalls" if combo.get_active() == 1 else "motionbgs"
+
+    def _update_market_header(self, source):
+        label = self.builder.get_object("LabelMarketHeader")
+        name = "MoeWalls" if source == "moewalls" else "motionbgs.com"
+        label.set_markup(
+            f'<span size="x-large"><b>Market</b></span>\n'
+            f'Browse live wallpapers from {name}'
+        )
+
+    def _init_market_tags(self, source):
         flowbox = self.builder.get_object("FlowBoxMarketTags")
+        for child in flowbox.get_children():
+            flowbox.remove(child)
+        if source == "moewalls":
+            tags = ["All", "Anime", "Games", "Fantasy", "Landscape", "Abstract",
+                    "Animal", "Sci-Fi", "Lifestyle", "Pixel Art", "Movies",
+                    "Vehicle", "Others"]
+        else:
+            tags = ["All", "Anime", "Games", "Car", "Nature", "Superhero", "Fantasy",
+                    "Space", "Technology", "Animal", "Horror", "Japan", "Holiday"]
         for tag in tags:
             btn = Gtk.ToggleButton(label=tag)
             btn.connect("toggled", self.on_market_tag_toggled, tag.lower())
             flowbox.add(btn)
         flowbox.show_all()
 
+    def _init_market(self):
         self.market_store = Gtk.ListStore(GdkPixbuf.Pixbuf, str, str)
         iconview = self.builder.get_object("IconViewMarket")
         iconview.set_pixbuf_column(0)
         iconview.set_text_column(1)
         iconview.set_model(self.market_store)
         iconview.connect("selection-changed", self._on_market_selection_changed)
+
+        combo = self.builder.get_object("ComboMarketSource")
+        combo.handler_block_by_func(self.on_market_source_changed)
+        combo.set_active(0)
+        combo.handler_unblock_by_func(self.on_market_source_changed)
+        self._init_market_tags("motionbgs")
+        self._update_market_header("motionbgs")
 
         self._load_market_wallpapers()
 
@@ -552,14 +584,23 @@ class ControlPanel(Gtk.Application):
         self.market_items = []
         status = self.builder.get_object("LabelMarketStatus")
         status.set_text("Loading...")
+        source = self._get_market_source()
 
         def fetch_thread():
-            if query:
-                items = market_search(query)
-            elif tag:
-                items = fetch_by_tag(tag)
+            if source == "moewalls":
+                if query:
+                    items = search_moewalls(query)
+                elif tag and tag != "all":
+                    items = fetch_moewalls_by_category(tag)
+                else:
+                    items = fetch_moewalls_latest()
             else:
-                items = fetch_latest()
+                if query:
+                    items = market_search(query)
+                elif tag and tag != "all":
+                    items = fetch_by_tag(tag)
+                else:
+                    items = fetch_latest()
             GLib.idle_add(self._display_market_items, items)
 
         thread = threading.Thread(target=fetch_thread, daemon=True)
@@ -585,6 +626,8 @@ class ControlPanel(Gtk.Application):
             thread.start()
 
     def _load_market_thumb(self, thumb_url, store, idx):
+        if not thumb_url:
+            return
         data = fetch_thumb_bytes(thumb_url)
         if data:
             try:
@@ -609,9 +652,19 @@ class ControlPanel(Gtk.Application):
         query = entry.get_text().strip()
         if query:
             self.market_current_tag = None
-            for btn in self.builder.get_object("FlowBoxMarketTags").get_children():
-                btn.set_active(False)
+            for child in self.builder.get_object("FlowBoxMarketTags").get_children():
+                btn = child.get_child()
+                if isinstance(btn, Gtk.ToggleButton):
+                    btn.set_active(False)
             self._load_market_wallpapers(query=query)
+
+    def on_market_source_changed(self, combo):
+        source = "moewalls" if combo.get_active() == 1 else "motionbgs"
+        self._init_market_tags(source)
+        self._update_market_header(source)
+        self.market_current_tag = None
+        self.builder.get_object("EntryMarketSearch").set_text("")
+        self._load_market_wallpapers()
 
     def on_market_tag_toggled(self, button, tag):
         if button.get_active():
@@ -635,7 +688,8 @@ class ControlPanel(Gtk.Application):
 
     def _download_and_apply(self, item):
         def work():
-            video_url = get_download_url(item["slug"])
+            source = self._get_market_source()
+            video_url = get_moewalls_download_url(item["slug"]) if source == "moewalls" else get_download_url(item["slug"])
             if not video_url:
                 GLib.idle_add(self._show_error, f"Could not find download URL for {item['title']}")
                 return
