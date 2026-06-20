@@ -652,10 +652,8 @@ class ControlPanel(Gtk.Application):
         query = entry.get_text().strip()
         if query:
             self.market_current_tag = None
-            for child in self.builder.get_object("FlowBoxMarketTags").get_children():
-                btn = child.get_child()
-                if isinstance(btn, Gtk.ToggleButton):
-                    btn.set_active(False)
+            for btn in self.builder.get_object("FlowBoxMarketTags").get_children():
+                btn.set_active(False)
             self._load_market_wallpapers(query=query)
 
     def on_market_source_changed(self, combo):
@@ -694,7 +692,10 @@ class ControlPanel(Gtk.Application):
                 GLib.idle_add(self._show_error, f"Could not find download URL for {item['title']}")
                 return
             safe_name = re.sub(r'[^\w\-_. ]', '', item["title"]).strip()
-            ext = os.path.splitext(video_url.split("?")[0])[1] or ".mp4"
+            if source == "moewalls":
+                ext = ".mp4"
+            else:
+                ext = os.path.splitext(video_url.split("?")[0])[1] or ".mp4"
             dest = os.path.join(VIDEO_WALLPAPER_DIR, f"{safe_name}{ext}")
             if download_video(video_url, dest):
                 GLib.idle_add(self._on_market_downloaded, dest)
