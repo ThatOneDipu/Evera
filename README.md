@@ -21,6 +21,7 @@ Evera offers video wallpaper functionality with the following features:
 - [x] Multi-monitor support!
 - [x] Streaming URL support! <sup>5</sup>
 - [x] Webpage as wallpaper! <sup>6</sup>
+- [x] Built-in wallpaper marketplace — browse & download from [motionbgs.com](https://motionbgs.com) and [moewalls.com](https://moewalls.com) <sup>7</sup>
 - [ ] You name it! =)
 
 <sup>1</sup> Video frame can be applied as system wallpaper, look great in <i>GNOME</i> (currently GNOME exclusive)  
@@ -28,7 +29,8 @@ Evera offers video wallpaper functionality with the following features:
 <sup>3</sup> Randomly select and play a video  
 <sup>4</sup> Use <i>vlc</i> as backend (currently HW acceleration doesn't work with Nvidia+Wayland combination...)  
 <sup>5</sup> Use <i>yt-dlp</i> as backend, tested with YouTube videos  
-<sup>6</sup> Theoretically it can be anything from a normal webpage to <i>Unity/Godot WebGL games</i>, be creative!
+<sup>6</sup> Theoretically it can be anything from a normal webpage to <i>Unity/Godot WebGL games</i>, be creative!  
+<sup>7</sup> Switch between sources in the Market tab. Downloads are saved to <i>~/Videos/Evera/</i> and applied automatically.
 
 ## What's different from Hidamari?
 
